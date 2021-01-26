@@ -1,57 +1,112 @@
-import { Scene, PerspectiveCamera, LineSegments,Quaternion,Vector3, Group, Color, LineBasicMaterial, EdgesGeometry, WebGLRenderer, BoxGeometry, MeshBasicMaterial, Mesh } from 'Three'
+import { Scene, PerspectiveCamera, Color, WebGLRenderer, MeshBasicMaterial, Mesh, Group, Quaternion, Vector3 } from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { RoundedBoxBufferGeometry } from './RoundedBoxBufferGeometry';
+
+function createCubelet(xLimit: number, yLimit: number, zLimit: number) {
+
+	const cubeletBaseEdgeLength = 1;
+	const cubeletBaseEdgeRadius = 0.06;
+	const cubeletBaseColor = 0x000000;
+
+	const stickerEdgeLength = cubeletBaseEdgeLength - (2 * cubeletBaseEdgeRadius);
+	const stickerEdgeRadius = 0.01;
+
+	const cubeletBaseGeometry = new RoundedBoxBufferGeometry(cubeletBaseEdgeLength, cubeletBaseEdgeLength, cubeletBaseEdgeLength, cubeletBaseEdgeRadius, 10);
+	const cubeletBaseMaterial = new MeshBasicMaterial({ color: cubeletBaseColor });
+	const cubeletBase = new Mesh(cubeletBaseGeometry, cubeletBaseMaterial);
+
+	const stickerGeometry = new RoundedBoxBufferGeometry(stickerEdgeLength, stickerEdgeLength, 2 * stickerEdgeRadius, stickerEdgeRadius, 10);
+
+	const cubelet = new Group();
+	cubelet.add(cubeletBase);
+
+	if (xLimit !== 0) {
+		const stickerMaterial = new MeshBasicMaterial({ color: xLimit === 1 ? 0xba0c2f : 0xfe5000 });
+		const sticker = new Mesh(stickerGeometry, stickerMaterial);
+		cubelet.add(sticker);
+		sticker.rotateY(Math.PI / 2);
+		sticker.position.set(0.5 * xLimit, 0, 0);
+	}
+
+	if (yLimit !== 0) {
+		const stickerMaterial = new MeshBasicMaterial({ color: yLimit === 1 ? 0xffffff : 0x003da5 });
+		const sticker = new Mesh(stickerGeometry, stickerMaterial);
+		cubelet.add(sticker);
+		sticker.rotateX(Math.PI / 2);
+		sticker.position.set(0, 0.5 * yLimit, 0);
+	}
+
+	if (zLimit !== 0) {
+		const stickerMaterial = new MeshBasicMaterial({ color: zLimit === 1 ? 0x009a44 : 0xffd700 });
+		const sticker = new Mesh(stickerGeometry, stickerMaterial);
+		cubelet.add(sticker);
+		sticker.position.set(0, 0, 0.5 * zLimit);
+	}
+
+	return cubelet;
+
+}
 
 export function run() {
 
 	const scene = new Scene();
-	scene.background = new Color(0xffffff);
+	scene.background = new Color(0xdddddd);
 	const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 	const renderer = new WebGLRenderer({ antialias: true });
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	window.document.body.appendChild(renderer.domElement);
 
-	const geometry = new BoxGeometry(1, 1, 1);
-	var cubeMaterials = [
-		new MeshBasicMaterial({ color: 0xba0c2f }),
-		new MeshBasicMaterial({ color: 0x009a44 }),
-		new MeshBasicMaterial({ color: 0x003da5 }),
-		new MeshBasicMaterial({ color: 0xfe5000 }),
-		new MeshBasicMaterial({ color: 0xffd700 }),
-		new MeshBasicMaterial({ color: 0xffffff })
-	];
-	const cube = new Mesh(geometry, cubeMaterials);
+	const top: Array<Group> = [];
+	const edgeLength = 5
+	const f = (edgeLength / 2) - 0.5
+	const explodeFactor = 1;
+	for (let x = -f; x <= f; x++) {
+		for (let y = -f; y <= f; y++) {
+			for (let z = -f; z <= f; z++) {
+				const xLimit = x === f ? 1 : x === -f ? -1 : 0;
+				const yLimit = y === f ? 1 : y === -f ? -1 : 0;
+				const zLimit = z === f ? 1 : z === -f ? -1 : 0;
+				if (xLimit === 0 && yLimit === 0 && zLimit === 0) {
+					continue;
+				}
+				const c = createCubelet(xLimit, yLimit, zLimit);
+				if(yLimit === 1) {
+					top.push(c)
+				}
+				scene.add(c);
+				c.position.set(x * explodeFactor, y * explodeFactor, z * explodeFactor)
+			}
+		}
+	}
 
-	const edges = new EdgesGeometry(geometry)
-	const edges_material = new LineBasicMaterial({ color: 0x000000 })
-	const e = new LineSegments(edges, edges_material)
+	camera.position.set(7, 2, 2);
 
-	const group = new Group();
-	group.add(cube);
-	group.add(e);
-	scene.add(group)
+	const controls = new OrbitControls(camera, renderer.domElement);
 
-	camera.position.z = 5;
+	function animate() {
 
-	const animate = function () {
-		window.requestAnimationFrame(animate);
+		requestAnimationFrame(animate);
 
-		var q = new Quaternion();
-		let axis = new Vector3(1, 0, 0)
-		let angle = 0.05
-		let point = new Vector3(2, 1, 0)
-	
-			q.setFromAxisAngle( axis, angle );
-	
-			group.applyQuaternion( q );
-	
-			group.position.sub( point );
-			group.position.applyQuaternion( q );
-			group.position.add( point );
-	
+		controls.update();
+
+		const axis = new Vector3(0, 1, 0)
+		const angle = 0.01
+		const point = new Vector3(0, 0, 0)
+
+		const q = new Quaternion();
+		q.setFromAxisAngle(axis, angle);
+
+		for(let c of top) {
+			c.applyQuaternion(q);
+			c.position.sub(point);
+			c.position.applyQuaternion(q);
+			c.position.add(point);
+		}
 
 		renderer.render(scene, camera);
-	};
 
+	}
 	animate();
 
 }
