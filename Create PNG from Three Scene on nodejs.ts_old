@@ -1,0 +1,84 @@
+import { Scene, PerspectiveCamera, WebGLRenderer, BoxGeometry, MeshBasicMaterial, Mesh, WebGLRenderTarget } from 'Three'
+import createContext from 'gl'
+import fs from 'fs'
+import { PNG } from 'pngjs'
+
+/*
+Needs:
+		"@types/gl": "^4.1.0",
+		"@types/pngjs": "^3.4.2",
+		"gl": "^4.9.0",
+		"pngjs": "^6.0.0",
+		"three": "^0.124.0"
+
+
+
+These warnings appear, which is normal but I could try to remove them:
+THREE.WebGLRenderer: WEBGL_depth_texture extension not supported.
+THREE.WebGLRenderer: OES_texture_half_float extension not supported.
+THREE.WebGLRenderer: OES_texture_half_float_linear extension not supported.
+*/
+
+export function run() {
+
+	const width = 64
+	const height = 64
+	const gl = createContext(width, height, { preserveDrawingBuffer: true })
+
+	const scene = new Scene()
+
+	const angle = 45
+	const aspect = width / height
+	const near = 0.1
+	const far = 100
+	const camera = new PerspectiveCamera(angle, aspect, near, far)
+
+	scene.add(camera)
+	camera.position.set(2, 0, 2)
+	camera.lookAt(scene.position)
+
+	const canvas = new Object() as HTMLCanvasElement
+	canvas.addEventListener = function () { }
+	const renderer = new WebGLRenderer({
+		antialias: true,
+		canvas: canvas,
+		context: gl,
+	})
+
+	const geometry = new BoxGeometry(1, 1, 1)
+	const material = new MeshBasicMaterial({ wireframe: true, color: 0x00ff00 })
+	const cube = new Mesh(geometry, material)
+	scene.add(cube)
+
+	const target = new WebGLRenderTarget(width, height);
+	renderer.setRenderTarget(target)
+	renderer.render(scene, camera)
+
+	const pixels = new Uint8Array(4 * width * height)
+	gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
+
+	const png = new PNG({ width: width, height: height })
+	for (let j = 0; j <= height; j++) {
+		for (let i = 0; i <= width; i++) {
+			
+			const k = j * width + i
+			const r = pixels[4 * k]
+			const g = pixels[4 * k + 1]
+			const b = pixels[4 * k + 2]
+			const a = pixels[4 * k + 3]
+
+			const m = (height - j + 1) * width + i
+			png.data[4 * m] = r
+			png.data[4 * m + 1] = g
+			png.data[4 * m + 2] = b
+			png.data[4 * m + 3] = a
+
+		}
+	}
+
+	const stream = fs.createWriteStream('example.png')
+	png.pack().pipe(stream)
+
+}
+
+run()

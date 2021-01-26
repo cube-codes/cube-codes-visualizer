@@ -1,0 +1,53 @@
+{
+	"name": "@cube-codes/cube-codes-visualizer",
+	"version": "1.0.0",
+	"description": "Typescript visualizer for a rubik cube",
+	"type": "commonjs",
+	"main": "dist/package/index.js",
+	"types": "dist/package/index.d.ts",
+	"scripts": {
+		"build": "tsc",
+		"test": "jest",
+		"build-browser": "rollup -c",
+		"build-docs": "typedoc",
+		"ci-build": "npm ci && npm run build && npm run test && npm run build-browser && npm run build-docs",
+		"build-docs-zip": "cd dist/docs && bestzip ../docs.zip * && cd ../..",
+		"ci-release": "npm run ci-build && npm run build-docs-zip && npm publish --access public"
+	},
+	"files": [
+		"dist/package"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/cube-codes/cube-codes-visualizer.git"
+	},
+	"keywords": [
+		"Rubik",
+		"Cube",
+		"Algorithm",
+		"Code",
+		"Program",
+		"Solution"
+	],
+	"author": "Lukas Lentner <kontakt@lukaslentner.de>",
+	"license": "GPL-3.0-only",
+	"bugs": {
+		"url": "https://github.com/cube-codes/cube-codes-visualizer/issues"
+	},
+	"homepage": "https://visualizer.cube.codes",
+	"devDependencies": {
+		"@rollup/plugin-commonjs": "^15.0.0",
+		"@rollup/plugin-node-resolve": "^9.0.0",
+		"@types/jest": "^26.0.13",
+		"bestzip": "^2.1.7",
+		"jest": "^26.4.2",
+		"rollup": "^2.26.11",
+		"ts-jest": "^26.3.0",
+		"typedoc": "^0.17.8",
+		"typedoc-plugin-external-module-name": "^4.0.3",
+		"typescript": "^4.0.2"
+	},
+	"dependencies": {
+		"three": "^0.124.0"
+	}
+}

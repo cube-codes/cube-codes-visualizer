@@ -1,0 +1,23 @@
+name: Create Build
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm run ci-build
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Package
+        path: dist/package
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Docs
+        path: dist/docs
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Browser
+        path: dist/browser
