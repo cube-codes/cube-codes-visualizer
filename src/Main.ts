@@ -2,6 +2,34 @@ import { Scene, PerspectiveCamera, Color, WebGLRenderer, MeshBasicMaterial, Mesh
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RoundedBoxBufferGeometry } from './RoundedBoxBufferGeometry';
 
+export class CubeState {
+
+	constructor(readonly edgeLength: number) {
+
+	}
+
+}
+
+export class CubeHighlighting {
+
+	constructor() {
+
+	}
+
+}
+
+export class CubeVisualizer {
+
+	constructor(initialState: CubeState, initialHighlighting: CubeHighlighting) {
+
+	}
+
+	private rotateSlices(dimension: CubeDimension, sliceCoordinates: Array<number>, angle: number): void {
+		
+	}
+
+}
+
 function createCubelet(xLimit: number, yLimit: number, zLimit: number) {
 
 	const cubeletBaseEdgeLength = 1;
@@ -91,7 +119,7 @@ export function run() {
 		controls.update();
 
 		const axis = new Vector3(0, 1, 0)
-		const angle = 0.01
+		const angle = 0.02
 		const point = new Vector3(0, 0, 0)
 
 		const q = new Quaternion();
