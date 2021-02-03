@@ -16,7 +16,7 @@ export class CubeVisualizer {
 
 	readonly #controls: OrbitControls
 
-	constructor(private readonly cube: Cube, readonly canvas: HTMLCanvasElement, readonly animationDuration: number) {
+	constructor(private readonly cube: Cube, readonly canvas: HTMLCanvasElement, public animationDuration: number) {
 
 		this.spec = this.cube.spec;
 		const initialState = this.cube.getState();
