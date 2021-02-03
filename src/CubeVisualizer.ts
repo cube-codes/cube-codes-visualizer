@@ -139,7 +139,7 @@ export class CubeVisualizer {
 		}
 
 		if (originLimit[1] !== 0) {
-			const stickerMaterial = new MeshBasicMaterial({ color: originLimit[1] === 1 ? 0xffffff : 0x003da5, transparent: true });
+			const stickerMaterial = new MeshBasicMaterial({ color: originLimit[1] === 1 ? 0xffffff : 0xffd700, transparent: true });
 			const sticker = new Mesh(stickerGeometry, stickerMaterial);
 			cubelet.add(sticker);
 			sticker.rotateX(Math.PI / 2);
@@ -147,7 +147,7 @@ export class CubeVisualizer {
 		}
 
 		if (originLimit[2] !== 0) {
-			const stickerMaterial = new MeshBasicMaterial({ color: originLimit[2] === 1 ? 0x009a44 : 0xffd700, transparent: true });
+			const stickerMaterial = new MeshBasicMaterial({ color: originLimit[2] === 1 ? 0x009a44 : 0x003da5, transparent: true });
 			const sticker = new Mesh(stickerGeometry, stickerMaterial);
 			cubelet.add(sticker);
 			sticker.position.set(0, 0, 0.5 * originLimit[2]);
