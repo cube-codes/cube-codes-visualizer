@@ -20,20 +20,18 @@
 				visualizer.resetCamera();
 			}
 
-			const a = { animation: true };
-
 			console.log('before');
-			await cube.mFront(1, a);
-			await cube.mRight(1, a);
-			await cube.mUp(1, a);
-			await cube.mRight(-1, a);
-			await cube.mUp(-1, a);
-			await cube.mFront(-1, a);
-			await cube.setState(CCV.CubeState.fromSolved(spec), a);
-			await cube.mFront(1, a);
-			await cube.mStand(1, a);
-			await cube.mStandInlay(1, a);
-			await cube.mX(1, a);
+			await cube.mFront();
+			await cube.mRight();
+			await cube.mUp();
+			await cube.mRight(-1);
+			await cube.mUp(-1);
+			await cube.mFront(-1);
+			await cube.setState(CCV.CubeState.fromSolved(spec));
+			await cube.mFront();
+			await cube.mStand();
+			await cube.mStandInlay();
+			await cube.mX();
 			console.log('after');
 
 		}

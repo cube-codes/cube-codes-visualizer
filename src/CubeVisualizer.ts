@@ -200,7 +200,7 @@ export class MoveAnimation implements Animation {
 
 		const sinceLastTime = time - lastTime;
 
-		const stepAngle = this.#fullAngle * (this.stateChanged.source?.animation === true ? sinceLastTime / this.visualizer.animationDuration : 1);
+		const stepAngle = this.#fullAngle * (this.stateChanged.source?.animation === false ? 1 : sinceLastTime / this.visualizer.animationDuration);
 		const dif = this.#fullAngle - this.#alreadyAngle;
 
 		if (Math.abs(stepAngle) > Math.abs(dif)) {
@@ -255,7 +255,7 @@ export class BeamAnimation implements Animation {
 
 		const sinceLastTime = time - lastTime;
 
-		const stepOpacity = 2 * (this.stateChanged.source?.animation === true ? sinceLastTime / this.visualizer.animationDuration : 1);
+		const stepOpacity = 2 * (this.stateChanged.source?.animation === false ? 1 : sinceLastTime / this.visualizer.animationDuration);
 		const dif = 2 - this.#alreadyOpacity;
 
 		if (this.#alreadyOpacity + stepOpacity > 0 && !this.#alreadySwitched) {
