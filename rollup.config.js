@@ -9,9 +9,6 @@ export default [{
 		format: 'iife',
 		sourcemap: 'inline'
 	},
-	onwarn: function(warning) {
-		if(warning.code === 'THIS_IS_UNDEFINED') return;
-	},
 	plugins: [
 		noderesolve({
 			browser: true

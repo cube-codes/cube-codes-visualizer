@@ -1,21 +1,53 @@
 <!doctype html>
 <html lang="en">
+
 <head>
 
-<meta charset="utf-8">
+	<meta charset="utf-8">
 
-<script src="../dist/browser/cube-codes-visualizer.js"></script>
-<script type="text/javascript">
+	<script src="../dist/browser/cube-codes-visualizer.js"></script>
+	<script type="text/javascript">
 
-let f = function() {
-CCV.run();
-}
+		let reset;
+		let load = async function () {
 
-</script>
+			const spec = new CCV.CubeSpecification(4);
+			const cube = new CCV.Cube(spec);
+			cube.stateChanged.on(e => { console.log(e) });
+			const visualizer = new CCV.CubeVisualizer(cube, document.getElementById('my-canvas'), 500);
+
+			reset = function() {
+				visualizer.resetCamera();
+			}
+
+			const a = { animation: true };
+
+			console.log('before');
+			await cube.mFront(1, a);
+			await cube.mRight(1, a);
+			await cube.mUp(1, a);
+			await cube.mRight(-1, a);
+			await cube.mUp(-1, a);
+			await cube.mFront(-1, a);
+			await cube.setState(CCV.CubeState.fromSolved(spec), a);
+			await cube.mFront(1, a);
+			await cube.mStand(1, a);
+			await cube.mStandInlay(1, a);
+			await cube.mX(1, a);
+			console.log('after');
+
+		}
+
+	</script>
 
 </head>
-<body onload="f(); " style="margin: 0; padding: 0; ">
 
+<body onload="load(); ">
+
+	<canvas id="my-canvas" style="width: 50vw; height: 50vh; background-color: #ddd; "></canvas>
+
+	<button onclick="reset(); ">Reset</button>
 
 </body>
+
 </html>
