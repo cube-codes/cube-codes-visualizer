@@ -58,6 +58,13 @@ export class CubeVisualizer {
 		};
 
 		this.#queue = new Array<Animation>();
+		this.#queue.push(new BeamAnimation(this, {
+			oldState: initialState,
+			newState: initialState,
+			source: {
+				animation: false
+			}
+		}, () => {}));
 
 		const fpsInterval = 1000 / 60;
 		let startTime: number;
