@@ -14,7 +14,7 @@ export class CubeVisualizer {
 
 	readonly #queue: Array<Animation>
 
-	readonly #controls: OrbitControls
+	readonly #camera: PerspectiveCamera
 
 	constructor(private readonly cube: Cube, readonly canvas: HTMLCanvasElement, public animationDuration: number) {
 
@@ -31,15 +31,15 @@ export class CubeVisualizer {
 		});
 
 		const scene = new Scene();
-		const camera = new PerspectiveCamera(30, 2, 0.1, 1000);
-		camera.position.setFromSphericalCoords(Utils.calculateCameraDistance(this.spec, canvas, camera.fov), (Math.PI / 2) - Math.PI / 8, Math.PI / 8);
+		this.#camera = new PerspectiveCamera(30, 2, 0.1, 1000);
+		this.#camera.position.setFromSphericalCoords(Utils.calculateCameraDistance(this.spec, canvas, this.#camera.fov), (Math.PI / 2) - Math.PI / 8, Math.PI / 8);
 
 		const renderer = new WebGLRenderer({ antialias: true, canvas: this.canvas, alpha: true });
 
 		this.cubelets = this.createCubelets(initialState.cubelets.map(c => c.initialLocation));
 		scene.add(...this.cubelets.values());
 
-		this.#controls = new OrbitControls(camera, renderer.domElement);
+		const controls = new OrbitControls(this.#camera, renderer.domElement);
 
 		const resizeCanvasToDisplaySize = () => {
 
@@ -49,10 +49,10 @@ export class CubeVisualizer {
 
 			if (canvas.width !== width || canvas.height !== height) {
 				renderer.setSize(width, height, false);
-				camera.aspect = width / height;
-				camera.updateProjectionMatrix();
-				const currentPosition = new Spherical().setFromVector3(camera.position);
-				camera.position.setFromSphericalCoords(Utils.calculateCameraDistance(this.spec, canvas, camera.fov), currentPosition.phi, currentPosition.theta);
+				this.#camera.aspect = width / height;
+				this.#camera.updateProjectionMatrix();
+				const currentPosition = new Spherical().setFromVector3(this.#camera.position);
+				this.#camera.position.setFromSphericalCoords(Utils.calculateCameraDistance(this.spec, canvas, this.#camera.fov), currentPosition.phi, currentPosition.theta);
 			}
 
 		};
@@ -93,8 +93,8 @@ export class CubeVisualizer {
 			lastTime = time;
 
 			resizeCanvasToDisplaySize();
-			this.#controls.update();
-			renderer.render(scene, camera);
+			controls.update();
+			renderer.render(scene, this.#camera);
 
 		}
 
@@ -167,7 +167,8 @@ export class CubeVisualizer {
 	}
 
 	resetCamera(): void {
-		this.#controls.reset();
+		const currentPosition = new Spherical().setFromVector3(this.#camera.position);
+		this.#camera.position.setFromSphericalCoords(currentPosition.radius, (Math.PI / 2) - Math.PI / 8, Math.PI / 8);
 	}
 
 }
@@ -270,7 +271,7 @@ export class BeamAnimation implements Animation {
 				const initialLocation = Utils.vectorId(cubelet.userData[CubeVisualizer.INITIAL_LOCATION]);
 				const newOrientation = this.#newStatesByInitialLocation.get(initialLocation)!.orientation;
 				const newOrigin = this.#newStatesByInitialLocation.get(initialLocation)!.location;
-				cubelet.setRotationFromMatrix(Utils.matrix4FromMatrix(newOrientation));
+				cubelet.quaternion.setFromRotationMatrix(Utils.matrix4FromMatrix(newOrientation));
 				cubelet.position.set(newOrigin.getX(), newOrigin.getY(), newOrigin.getZ());
 			}
 			this.#alreadySwitched = true;
