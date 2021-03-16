@@ -2,7 +2,7 @@ import noderesolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 
 export default [{
-	input: 'dist/package/index.js',
+	input: 'dist/package/index.rollup.js',
 	output: {
 		name: 'CCV',
 		file: 'dist/browser/cube-codes-visualizer.js',

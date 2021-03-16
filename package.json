@@ -39,6 +39,7 @@
 		"@rollup/plugin-commonjs": "^15.0.0",
 		"@rollup/plugin-node-resolve": "^9.0.0",
 		"@types/jest": "^26.0.13",
+		"@types/three": "^0.126.1",
 		"bestzip": "^2.1.7",
 		"jest": "^26.4.2",
 		"rollup": "^2.26.11",
@@ -49,7 +50,7 @@
 	},
 	"dependencies": {
 		"@cube-codes/cube-codes-model": "0.0.30",
-		"three": "^0.124.0",
-		"three-orbitcontrols-ts": "^0.1.2"
+		"@three-ts/orbit-controls": "^1.4.7",
+		"three": "^0.124.0"
 	}
 }
