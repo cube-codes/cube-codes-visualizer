@@ -12,26 +12,22 @@
 		let load = async function () {
 
 			const spec = new CCV.CubeSpecification(4);
-			const cube = new CCV.Cube(spec);
-			cube.stateChanged.on(e => { console.log(e) });
+			const solutionCondition = new CCV.CubeSolutionCondition(CCV.CubeSolutionConditionType.COLOR);
+			const cube = new CCV.Cube(spec, solutionCondition);
 			const visualizer = new CCV.CubeVisualizer(cube, document.getElementById('my-canvas'), 500);
 
 			reset = function() {
-				visualizer.resetCamera();
+				visualizer.situation.camera.resetPerspective();
 			}
 
 			console.log('before');
-			await cube.mFront();
-			await cube.mRight();
-			await cube.mUp();
-			await cube.mRight(-1);
-			await cube.mUp(-1);
-			await cube.mFront(-1);
+			await cube.move(new CCV.CubeMove(spec, CCV.CubeFace.FRONT, 1, 1, 1));
+			await cube.move(new CCV.CubeMove(spec, CCV.CubeFace.RIGHT, 1, 1, 1));
+			await cube.move(new CCV.CubeMove(spec, CCV.CubeFace.UP, 1, 1, 1));
+			await cube.move(new CCV.CubeMove(spec, CCV.CubeFace.RIGHT, 1, 1, -1));
+			await cube.move(new CCV.CubeMove(spec, CCV.CubeFace.UP, 1, 1, -1));
+			await cube.move(new CCV.CubeMove(spec, CCV.CubeFace.FRONT, 1, 1, -1));
 			await cube.setState(CCV.CubeState.fromSolved(spec));
-			await cube.mFront();
-			await cube.mStand();
-			await cube.mStandInlay();
-			await cube.mX();
 			console.log('after');
 
 		}
