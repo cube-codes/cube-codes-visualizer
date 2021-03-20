@@ -5,7 +5,7 @@ export default [{
 	input: 'dist/package/index.rollup.js',
 	output: {
 		name: 'CCV',
-		file: 'dist/browser/cube-codes-visualizer.js',
+		file: 'dist/browser/browser.js',
 		format: 'iife',
 		sourcemap: 'inline'
 	},
