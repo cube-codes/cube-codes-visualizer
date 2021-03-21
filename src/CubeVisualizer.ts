@@ -23,6 +23,8 @@ export class CubeVisualizer {
 		this.situation = new CubeSituation(cube.spec, cube.getState(), this.canvas.clientWidth, this.canvas.clientHeight);
 
 		this.cameraControls = new OrbitControls(this.situation.camera, this.canvas);
+		this.cameraControls.enablePan = false;
+		this.cameraControls.enableZoom = false;
 
 		this.renderer = new WebGLRenderer({
 			alpha: true,
@@ -67,8 +69,9 @@ export class CubeVisualizer {
 				this.situation.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
 				this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight, false);
 			}
-
+			
 			this.cameraControls.update();
+
 			this.renderer.render(this.situation.scene, this.situation.camera);
 
 			lastTime = time;
