@@ -71,6 +71,7 @@ export class CubeVisualizer {
 			}
 			
 			this.cameraControls.update();
+			this.situation.light.position.copy(this.situation.camera.position);
 
 			this.renderer.render(this.situation.scene, this.situation.camera);
 
