@@ -103,7 +103,7 @@ export class RoundedBoxBufferGeometry extends BufferGeometry {
 
 				var sinVa = Math.sin(va);
 
-				if (y == radiusSegments) {
+				if (y === radiusSegments) {
 
 					vertex.set(0, 1, 0);
 

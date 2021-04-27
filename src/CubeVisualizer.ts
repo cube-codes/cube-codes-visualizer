@@ -20,7 +20,7 @@ export class CubeVisualizer {
 
 	constructor(readonly cube: Cube, readonly canvas: HTMLCanvasElement, public animationDuration: number) {
 
-		this.situation = new CubeSituation(cube.spec, cube.getState(), this.canvas.clientWidth, this.canvas.clientHeight);
+		this.situation = new CubeSituation(cube.spec, cube.solutionCondition, cube.getState(), this.canvas.clientWidth, this.canvas.clientHeight);
 
 		this.cameraControls = new OrbitControls(this.situation.camera, this.canvas);
 		this.cameraControls.enablePan = false;

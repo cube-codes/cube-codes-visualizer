@@ -8,5 +8,6 @@ export * from './CubeletRealisation';
 export * from './CubeRealisation';
 export * from './CubeSituation';
 export * from './CubeVisualizer';
+export * from './Font';
 export * from './RoundedBoxBufferGeometry';
 export * from './Utils';
